@@ -13,7 +13,7 @@ public class Main {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
-		}
+		} // comment
 		MainFrame mf = new MainFrame();
 
 	}
