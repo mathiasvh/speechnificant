@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -46,14 +47,31 @@ public class MainFrame extends JFrame implements ActionListener {
 			int returnVal = fc.showOpenDialog(MainFrame.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				file = fc.getSelectedFile();
-				try {
-					Runtime.getRuntime().exec("ffmpeg -i file.wav -f -s16be -ar 8000 -acodec pcm_s16be file.raw", null, Context.getFilesDir());
-				} catch (IOException exc) {
-				}
-				//String filePath = file.getAbsolutePath();
+				String command = "C:\\ffmpeg\\bin\\ffmpeg -i " + "examples\\" + file.getName()
+						+ " -f s16be -ar 8000 -acodec pcm_s16be " + "examples\\" + file.getName().replaceAll(".wav", "")
+						+ ".raw";
+				execCommand(command);
 			} else {
 				// cancel
 			}
+		}
+	}
+	
+
+	/**
+	 * Executes a command as if it were executed in a MSDOS terminal
+	 * @param cmd	The command to be executed
+	 */
+	private void execCommand(String cmd) {
+		try {
+			cmd = "cmd /c " + cmd;
+			final Process process = Runtime.getRuntime().exec(cmd);
+			final InputStream in = process.getInputStream();
+			int ch;
+			while ((ch = in.read()) != -1)
+				System.out.print((char) ch);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
