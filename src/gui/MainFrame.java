@@ -47,9 +47,9 @@ public class MainFrame extends JFrame implements ActionListener {
 			int returnVal = fc.showOpenDialog(MainFrame.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				file = fc.getSelectedFile();
-				String command = "C:\\ffmpeg\\bin\\ffmpeg -i " + "examples\\" + file.getName()
-						+ " -f s16be -ar 8000 -acodec pcm_s16be " + "examples\\" + file.getName().replaceAll(".wav", "")
-						+ ".raw";
+				String command = "assets\\ffmpeg -i " + "examples\\" + file.getName()
+				+ " -f s16be -ar 8000 -acodec pcm_s16be " + "examples\\" + file.getName().replaceAll(".wav", "")
+				+ ".raw";
 				execCommand(command);
 			} else {
 				// cancel
