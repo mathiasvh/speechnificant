@@ -3,6 +3,8 @@ package controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 import gui.MainFrame;
 
@@ -14,6 +16,8 @@ public class Controller {
 		this.mf = mfi;
 		this.mf.setController(this);
 	}
+	
+	private File currentlyLoadedFile = null;
 	
 	public void load(File file) {
 		createOutputDir();
@@ -30,11 +34,16 @@ public class Controller {
 			}
 		}
 		
+		String outputFile = "out\\" + fileName + "\\loaded.raw";
+		
 		String command = "assets\\ffmpeg -i " + file.getAbsolutePath()
-		+ " -f s16be -ar 8000 -acodec pcm_s16be " + "out\\" + fileName + "\\loaded.raw";
+		+ " -f s16be -ar 8000 -acodec pcm_s16be " + outputFile;
 		boolean executed = execCommand(command);
-		if (executed)
+		if (executed) {
 			mf.setFileLoaded(file.getName());
+			this.currentlyLoadedFile = new File(outputFile);
+		}
+			
 	}
 	
 	private void createOutputDir() {
@@ -63,7 +72,22 @@ public class Controller {
 	 * @param cmd	The command to be executed
 	 * @return boolean	Whether or not the command has been executed, either succesfull or not
 	 */
-	private boolean execCommand(String cmd) {
+	public static boolean execCommand(String cmd) {
+		try {
+			Process p = Runtime.getRuntime().exec(cmd);
+            Scanner s = new Scanner(p.getInputStream());
+            PrintWriter toChild = new PrintWriter(p.getOutputStream());
+
+            toChild.println("N");    // write to child's stdin
+            toChild.close();            // or you can use toChild.flush()
+            System.out.println(s.next());
+            s.close();
+		} catch (Exception e) {
+			// No element left in scanner
+		}
+	    return true;
+	}
+	/*private boolean execCommand(String cmd) {
 		try {
 			cmd = "cmd /c " + cmd;
 			final Process process = Runtime.getRuntime().exec(cmd);
@@ -71,11 +95,16 @@ public class Controller {
 			int ch;
 			while ((ch = in.read()) != -1)
 				System.out.print((char) ch);
-			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
-	}
+		
+		String s = null;
+		while ((s = stdInput.readLine()) != null) {
+		    System.out.println(s);
+		}
+		return true;
+	}*/
 
 }
