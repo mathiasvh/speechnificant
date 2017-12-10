@@ -21,14 +21,14 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JFileChooser fc;
 	private JButton btnLoadFile, btnCompress, btnDecompress;
 	private JPanel panel;
-	private JLabel lblCurrentlyLoadFile, lblLastFileCompressedSize;
+	private JLabel lblCurrentlyLoadFile, lblLastFileCompressedSize, lblSizeLoadedFile;
 	
 	private File file;
 	
 	public MainFrame() {
 		this.setTitle("Speechnificant");
 		this.setResizable(false);
-		this.setBounds(0, 0, 450, 270);
+		this.setBounds(0, 0, 450, 285);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.panel = new JPanel(null);
@@ -46,25 +46,31 @@ public class MainFrame extends JFrame implements ActionListener {
 		
 		lblCurrentlyLoadFile = new JLabel("(none)");
 		lblCurrentlyLoadFile.setBounds(150, 45, 300, 25);
+		
+		JLabel lblSizeLoaded = new JLabel("File size: ");
+		lblSizeLoaded.setBounds(10, 60, 150, 25);
+		
+		lblSizeLoadedFile = new JLabel("N/A");
+		lblSizeLoadedFile.setBounds(150, 60, 50, 25);
 
 		JSeparator sep1 = new JSeparator(SwingConstants.HORIZONTAL);
-		sep1.setBounds(0, 85, this.getWidth(), 1);
+		sep1.setBounds(0, 100, this.getWidth(), 1);
 
 		btnCompress = new JButton("Compress");
-		btnCompress.setBounds(10, 100, 150, 25);
+		btnCompress.setBounds(10, 115, 150, 25);
 		btnCompress.addActionListener(this);
 		
-		JLabel lblLastFileCompressed = new JLabel("Filesize of last compressed file (in kB): ");
-		lblLastFileCompressed.setBounds(10, 130, 230, 25);
+		JLabel lblLastFileCompressed = new JLabel("File size of last compressed file: ");
+		lblLastFileCompressed.setBounds(10, 145, 200, 25);
 		
 		lblLastFileCompressedSize = new JLabel("N/A");
-		lblLastFileCompressedSize.setBounds(250, 130, 50, 25);
+		lblLastFileCompressedSize.setBounds(210, 145, 50, 25);
 
 		JSeparator sep2 = new JSeparator(SwingConstants.HORIZONTAL);
-		sep2.setBounds(0, 160, this.getWidth(), 1);
+		sep2.setBounds(0, 175, this.getWidth(), 1);
 
 		btnDecompress = new JButton("Decompress");
-		btnDecompress.setBounds(10, 175, 150, 25);
+		btnDecompress.setBounds(10, 190, 150, 25);
 		btnDecompress.addActionListener(this);
 		
 		fc = new JFileChooser();
@@ -75,6 +81,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.panel.add(btnLoadFile);
 		this.panel.add(lblLoaded);
 		this.panel.add(lblCurrentlyLoadFile);
+		this.panel.add(lblSizeLoaded);
+		this.panel.add(lblSizeLoadedFile);
 		this.panel.add(sep1);
 		this.panel.add(btnCompress);
 		this.panel.add(lblLastFileCompressed);
@@ -99,8 +107,9 @@ public class MainFrame extends JFrame implements ActionListener {
 			this.controller = c;
 	}
 	
-	public void setFileLoaded(String fname) {
+	public void setFileLoaded(String fname, long size) {
 		this.lblCurrentlyLoadFile.setText(fname);
+		this.lblSizeLoadedFile.setText(readableFileSize(size));
 	}
 	
 	

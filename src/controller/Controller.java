@@ -45,7 +45,7 @@ public class Controller {
 		+ " -f s16be -ar 8000 -acodec pcm_s16be " + outputFile;
 		boolean executed = execCommand(command);
 		if (executed) {
-			mf.setFileLoaded(file.getName());
+			mf.setFileLoaded(file.getName(), file.length());
 			this.currentlyLoadedFile = new File(outputFile);
 		}
 	}
@@ -79,13 +79,11 @@ public class Controller {
 
 		byte[] compressedBytes;
 		
-		System.out.println(currentFileDir.getAbsolutePath() + "\\");
 		String compressedFile = currentFileDir.getAbsolutePath() + "\\" + fileName + ".sph";
 		try (FileOutputStream fos = new FileOutputStream(compressedFile)) {
 			compressedBytes = Compressor.compress(file);
 			fos.write(compressedBytes);
 			fos.close();
-			System.out.println("write");
 		} catch (IOException e) {}
 		
 		this.mf.setFileLastCompressedSize(new File(compressedFile).length());
