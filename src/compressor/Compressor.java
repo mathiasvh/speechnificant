@@ -1,16 +1,21 @@
 package compressor;
 
+import java.io.File;
+
 public class Compressor {
 	
-	public Compressor() {
-	}
+	// prevent instantiation
+	private Compressor() {}
 	
-	public void attachFile(int file) {
-		//this.file = file
-	}
-	
-	public static void compress(int file) {
+	public static byte[] compress(File input) {
+		long nbBytes = input.length();
 		
+		if (nbBytes == 0L)
+			return null;
+		
+		
+		
+		return null;
 	}
 
 }

@@ -1,11 +1,10 @@
 package controller;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import compressor.Compressor;
 import gui.MainFrame;
 
 public class Controller {
@@ -15,6 +14,10 @@ public class Controller {
 	public Controller(MainFrame mfi) {
 		this.mf = mfi;
 		this.mf.setController(this);
+	}
+	
+	public File getCurrentlyLoadFile() {
+		return this.currentlyLoadedFile;
 	}
 	
 	private File currentlyLoadedFile = null;
@@ -59,8 +62,8 @@ public class Controller {
 		}
 	}
 	
-	public void compress() {
-		//TODO
+	public void compress(File file) {
+		Compressor.compress(file);
 	}
 	
 	public void decompress() {
@@ -78,8 +81,8 @@ public class Controller {
             Scanner s = new Scanner(p.getInputStream());
             PrintWriter toChild = new PrintWriter(p.getOutputStream());
 
-            toChild.println("N");    // write to child's stdin
-            toChild.close();            // or you can use toChild.flush()
+            toChild.println("y"); // write yes in case it asks to overwrite existing file
+            toChild.close();
             System.out.println(s.next());
             s.close();
 		} catch (Exception e) {
@@ -87,24 +90,4 @@ public class Controller {
 		}
 	    return true;
 	}
-	/*private boolean execCommand(String cmd) {
-		try {
-			cmd = "cmd /c " + cmd;
-			final Process process = Runtime.getRuntime().exec(cmd);
-			final InputStream in = process.getInputStream();
-			int ch;
-			while ((ch = in.read()) != -1)
-				System.out.print((char) ch);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-		
-		String s = null;
-		while ((s = stdInput.readLine()) != null) {
-		    System.out.println(s);
-		}
-		return true;
-	}*/
-
 }

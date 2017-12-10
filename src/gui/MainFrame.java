@@ -106,7 +106,15 @@ public class MainFrame extends JFrame implements ActionListener {
 				// cancel
 			}
 		} else if (e.getSource() == btnCompress) {
-			controller.compress();
+			fc.setCurrentDirectory(this.controller.getCurrentlyLoadFile());
+			int returnVal = fc.showOpenDialog(MainFrame.this);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				file = fc.getSelectedFile();
+				controller.compress(file);
+			} else {
+				// cancel
+			}
+			
 		} else if (e.getSource() == btnDecompress) {
 			controller.decompress();
 		}
