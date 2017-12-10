@@ -1,8 +1,9 @@
-package compressor;
+package main;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import controller.Controller;
 import gui.MainFrame;
 
 public class Main {
@@ -14,7 +15,7 @@ public class Main {
 				| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		} // comment
-		MainFrame mf = new MainFrame();
+		new Controller(new MainFrame());
 
 	}
 
