@@ -20,6 +20,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JFileChooser fc;
 	private JButton btnLoadFile, btnCompress, btnDecompress;
 	private JPanel panel;
+	private JLabel lblCurrentlyLoadFile;
 	
 	private File file;
 	
@@ -42,7 +43,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		JLabel lblLoaded = new JLabel("File currently loaded:");
 		lblLoaded.setBounds(10, 45, 130, 25);
 		
-		JLabel lblCurrentlyLoadFile = new JLabel("(none)");
+		lblCurrentlyLoadFile = new JLabel("(none)");
 		lblCurrentlyLoadFile.setBounds(150, 45, 300, 25);
 
 		JSeparator sep1 = new JSeparator(SwingConstants.HORIZONTAL);
@@ -60,6 +61,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		btnDecompress.addActionListener(this);
 		
 		fc = new JFileChooser();
+		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 		
 		this.panel.setLayout(null);
 		this.panel.add(lblInput);
@@ -82,6 +84,10 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void setController(Controller c) {
 		if (controller == null)
 			this.controller = c;
+	}
+	
+	public void setFileLoaded(String fname) {
+		this.lblCurrentlyLoadFile.setText(fname);
 	}
 	
 	
