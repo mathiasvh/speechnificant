@@ -3,6 +3,7 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.DecimalFormat;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -20,7 +21,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JFileChooser fc;
 	private JButton btnLoadFile, btnCompress, btnDecompress;
 	private JPanel panel;
-	private JLabel lblCurrentlyLoadFile;
+	private JLabel lblCurrentlyLoadFile, lblLastFileCompressedSize;
 	
 	private File file;
 	
@@ -52,6 +53,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		btnCompress = new JButton("Compress");
 		btnCompress.setBounds(10, 100, 150, 25);
 		btnCompress.addActionListener(this);
+		
+		JLabel lblLastFileCompressed = new JLabel("Filesize of last compressed file (in kB): ");
+		lblLastFileCompressed.setBounds(10, 130, 230, 25);
+		
+		lblLastFileCompressedSize = new JLabel("N/A");
+		lblLastFileCompressedSize.setBounds(250, 130, 50, 25);
 
 		JSeparator sep2 = new JSeparator(SwingConstants.HORIZONTAL);
 		sep2.setBounds(0, 160, this.getWidth(), 1);
@@ -70,6 +77,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.panel.add(lblCurrentlyLoadFile);
 		this.panel.add(sep1);
 		this.panel.add(btnCompress);
+		this.panel.add(lblLastFileCompressed);
+		this.panel.add(lblLastFileCompressedSize);
 		this.panel.add(sep2);
 		this.panel.add(btnDecompress);
 
@@ -77,6 +86,10 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.panel.setVisible(true);
 		
 		this.setVisible(true);
+	}
+	
+	public void setFileLastCompressedSize(long size) {
+		this.lblLastFileCompressedSize.setText(readableFileSize(size));
 	}
 	
 	private Controller controller = null;
@@ -106,7 +119,11 @@ public class MainFrame extends JFrame implements ActionListener {
 				// cancel
 			}
 		} else if (e.getSource() == btnCompress) {
-			fc.setCurrentDirectory(this.controller.getCurrentlyLoadFile());
+			File currentlyLoadedFile = this.controller.getCurrentlyLoadFile();
+			if (currentlyLoadedFile == null)
+				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+			else
+				fc.setCurrentDirectory(this.controller.getCurrentlyLoadFile());
 			int returnVal = fc.showOpenDialog(MainFrame.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				file = fc.getSelectedFile();
@@ -120,7 +137,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		}
 	}
 	
-
+	public static String readableFileSize(long size) {
+	    if(size <= 0) return "0";
+	    final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+	    int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+	    return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+	}
 	
 
 }

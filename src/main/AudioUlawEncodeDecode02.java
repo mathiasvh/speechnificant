@@ -117,16 +117,24 @@ public class AudioUlawEncodeDecode02 {
 		// sample value.
 		return (short) ((sign != 0) ? -rawValue : rawValue);
 	}
+	
+	/*
+	 * 	The original sample value (which is the same as for the truncation experiment)
+		The encoded ULAW byte value in hex notation
+		The 16-bit value produced by decoding the ULAW byte
+		The difference between the original sample value and the decoded value
+		That difference (error) expressed as a percent of the original sample value
+	 */
 
 	static void processAndDisplayUlaw() {
 		while ((shortValue >= 0) & (shortValue < 32000)) {
 			byte ulawByte = encode(shortValue);
 			short result = decode(ulawByte);
-			System.out.print(shortValue + " ");
-			System.out.print("0x" + Integer.toHexString(ulawByte & 0xff) + " ");
-			System.out.print(result + " ");
-			System.out.print(shortValue - result);
-			if (shortValue > 0) {
+			System.out.print(shortValue + " "); // val
+			System.out.print("0x" + Integer.toHexString(ulawByte & 0xff) + " "); //ULAW byte
+			System.out.print(result + " "); // decoded val
+			System.out.print(shortValue - result); // diff
+			if (shortValue > 0) { // diff in percentage
 				System.out.println(" " + ((float) (100.0 * (shortValue - result) / shortValue)) + "%");
 			} else {
 				System.out.println();

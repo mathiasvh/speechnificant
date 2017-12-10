@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -46,7 +48,6 @@ public class Controller {
 			mf.setFileLoaded(file.getName());
 			this.currentlyLoadedFile = new File(outputFile);
 		}
-			
 	}
 	
 	private void createOutputDir() {
@@ -63,7 +64,31 @@ public class Controller {
 	}
 	
 	public void compress(File file) {
-		Compressor.compress(file);
+		createOutputDir();
+		String fileName = file.getName().replaceAll(".raw", "");
+
+		// make dir to work in for current file
+		File currentFileDir = new File("out\\" + getProjectPath(file));
+		if (!currentFileDir.exists()) {
+			try {
+				currentFileDir.mkdir();
+			} catch (SecurityException se) {
+				System.out.println("Could not create necessary directory.");
+			}
+		}
+
+		byte[] compressedBytes;
+		
+		System.out.println(currentFileDir.getAbsolutePath() + "\\");
+		String compressedFile = currentFileDir.getAbsolutePath() + "\\" + fileName + ".sph";
+		try (FileOutputStream fos = new FileOutputStream(compressedFile)) {
+			compressedBytes = Compressor.compress(file);
+			fos.write(compressedBytes);
+			fos.close();
+			System.out.println("write");
+		} catch (IOException e) {}
+		
+		this.mf.setFileLastCompressedSize(new File(compressedFile).length());
 	}
 	
 	public void decompress() {
@@ -89,5 +114,18 @@ public class Controller {
 			// No element left in scanner
 		}
 	    return true;
+	}
+	
+	private String getProjectPath(File file) {
+		if(file.getName().replaceAll(".raw", "").equals("loaded"))
+			return getLastDirectoryInPath(file);
+		else
+			return file.getName().replaceAll(".raw", "");
+	}
+	
+	private String getLastDirectoryInPath(File file) {
+		String path = file.getAbsolutePath();
+		String nameCutOff = path.substring(0, path.lastIndexOf("\\"));
+		return nameCutOff.substring(nameCutOff.lastIndexOf("\\")).replace("\\", "");
 	}
 }
