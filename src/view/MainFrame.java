@@ -1,4 +1,4 @@
-package gui;
+package view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +21,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JFileChooser fc;
 	private JButton btnLoadFile, btnCompress, btnDecompress;
 	private JPanel panel;
-	private JLabel lblCurrentlyLoadFile, lblLastFileCompressedSize, lblSizeLoadedFile;
+	private JLabel lblCurrentlyLoadFile, lblSizeLoadedFile, lblLastFileCompressedSize, lblLastFileDecompressedSize;
 	
 	private File file;
 	
@@ -39,6 +39,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		
 		btnLoadFile = new JButton("Load file..");
 		btnLoadFile.setBounds(150, 15, 150, 25);
+		btnLoadFile.setToolTipText("Must be a .wav file");
 		btnLoadFile.addActionListener(this);
 		
 		JLabel lblLoaded = new JLabel("File currently loaded:");
@@ -58,6 +59,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
 		btnCompress = new JButton("Compress");
 		btnCompress.setBounds(10, 115, 150, 25);
+		btnCompress.setToolTipText("Must be a .raw file (pcm_16be)");
 		btnCompress.addActionListener(this);
 		
 		JLabel lblLastFileCompressed = new JLabel("File size of last compressed file: ");
@@ -71,7 +73,14 @@ public class MainFrame extends JFrame implements ActionListener {
 
 		btnDecompress = new JButton("Decompress");
 		btnDecompress.setBounds(10, 190, 150, 25);
+		btnDecompress.setToolTipText("Must be a .sph file");
 		btnDecompress.addActionListener(this);
+		
+		JLabel lblLastFileDecompressed = new JLabel("File size of last decompressed file: ");
+		lblLastFileDecompressed.setBounds(10, 210, 215, 25);
+		
+		lblLastFileDecompressedSize = new JLabel("N/A");
+		lblLastFileDecompressedSize.setBounds(225, 210, 50, 25);
 		
 		fc = new JFileChooser();
 		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -89,6 +98,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.panel.add(lblLastFileCompressedSize);
 		this.panel.add(sep2);
 		this.panel.add(btnDecompress);
+		this.panel.add(lblLastFileDecompressed);
+		this.panel.add(lblLastFileDecompressedSize);
 
 		getContentPane().add(panel);
 		this.panel.setVisible(true);
@@ -98,6 +109,10 @@ public class MainFrame extends JFrame implements ActionListener {
 	
 	public void setFileLastCompressedSize(long size) {
 		this.lblLastFileCompressedSize.setText(readableFileSize(size));
+	}
+	
+	public void setFileLastDecompressedSize(long size) {
+		this.lblLastFileDecompressedSize.setText(readableFileSize(size));
 	}
 	
 	private Controller controller = null;
@@ -142,7 +157,18 @@ public class MainFrame extends JFrame implements ActionListener {
 			}
 			
 		} else if (e.getSource() == btnDecompress) {
-			controller.decompress();
+			File currentlyLoadedFile = this.controller.getCurrentlyLoadFile();
+			if (currentlyLoadedFile == null)
+				fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+			else
+				fc.setCurrentDirectory(this.controller.getCurrentlyLoadFile());
+			int returnVal = fc.showOpenDialog(MainFrame.this);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				file = fc.getSelectedFile();
+				controller.decompress(file);
+			} else {
+				// cancel
+			}
 		}
 	}
 	

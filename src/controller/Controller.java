@@ -6,8 +6,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import compressor.Compressor;
-import gui.MainFrame;
+import utils.Compressor;
+import utils.Decompressor;
+import view.MainFrame;
 
 public class Controller {
 	
@@ -79,7 +80,7 @@ public class Controller {
 
 		byte[] compressedBytes;
 		
-		String compressedFile = currentFileDir.getAbsolutePath() + "\\" + fileName + ".sph";
+		String compressedFile = currentFileDir.getAbsolutePath() + "\\" + "compressed.sph";
 		try (FileOutputStream fos = new FileOutputStream(compressedFile)) {
 			compressedBytes = Compressor.compress(file);
 			fos.write(compressedBytes);
@@ -89,8 +90,41 @@ public class Controller {
 		this.mf.setFileLastCompressedSize(new File(compressedFile).length());
 	}
 	
-	public void decompress() {
-		//TODO
+	public void decompress(File file) {
+		createOutputDir();
+		String fileName = file.getName().replaceAll(".sph", "");
+
+		// make dir to work in for current file
+		File currentFileDir = new File("out\\" + getProjectPath(file));
+		if (!currentFileDir.exists()) {
+			try {
+				currentFileDir.mkdir();
+			} catch (SecurityException se) {
+				System.out.println("Could not create necessary directory.");
+			}
+		}
+
+		byte[] decompressedBytes;
+		// TODO if after .dec to .wav the wav is found, delete .dec
+		String decompressedFile = currentFileDir.getAbsolutePath() + "\\" + fileName + ".dec";
+		try (FileOutputStream fos = new FileOutputStream(decompressedFile)) {
+			decompressedBytes = Decompressor.decompress(file);
+			fos.write(decompressedBytes);
+			fos.close();
+		} catch (IOException e) {}
+		
+		
+		String outputFile = "out\\" + getProjectPath(new File(decompressedFile)) + "\\decompressed.wav";
+		String command = "assets\\ffmpeg -i " + decompressedFile
+		+ /*" -f wav -ar 8000 -acodec wav " +*/ outputFile;
+		System.out.println(command);
+		boolean executed = execCommand(command);
+		if (executed) {
+			mf.setFileLoaded(file.getName(), file.length());
+			this.currentlyLoadedFile = new File(outputFile);
+		}
+		
+		this.mf.setFileLastDecompressedSize(new File(decompressedFile).length());
 	}
 	
 	/**
@@ -115,10 +149,11 @@ public class Controller {
 	}
 	
 	private String getProjectPath(File file) {
-		if(file.getName().replaceAll(".raw", "").equals("loaded"))
+		String fileName = file.getName().replaceAll(".raw", "").replaceAll(".sph", "").replaceAll(".dec", "").replaceAll(".wav", "");
+		if(fileName.equals("loaded") || fileName.equals("compressed") || fileName.equals("decompressed"))
 			return getLastDirectoryInPath(file);
 		else
-			return file.getName().replaceAll(".raw", "");
+			return fileName;
 	}
 	
 	private String getLastDirectoryInPath(File file) {
