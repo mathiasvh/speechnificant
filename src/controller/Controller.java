@@ -66,7 +66,6 @@ public class Controller {
 	
 	public void compress(File file) {
 		createOutputDir();
-		String fileName = file.getName().replaceAll(".raw", "");
 
 		// make dir to work in for current file
 		File currentFileDir = new File("out\\" + getProjectPath(file));
@@ -92,7 +91,6 @@ public class Controller {
 	
 	public void decompress(File file) {
 		createOutputDir();
-		String fileName = file.getName().replaceAll(".sph", "");
 
 		// make dir to work in for current file
 		File currentFileDir = new File("out\\" + getProjectPath(file));
@@ -105,8 +103,8 @@ public class Controller {
 		}
 
 		byte[] decompressedBytes;
-		// TODO if after .dec to .wav the wav is found, delete .dec
-		String decompressedFile = currentFileDir.getAbsolutePath() + "\\" + fileName + ".dec";
+		// TODO if after .raw to .wav the wav is found, delete .dec
+		String decompressedFile = currentFileDir.getAbsolutePath() + "\\" + "decompressed.raw";
 		try (FileOutputStream fos = new FileOutputStream(decompressedFile)) {
 			decompressedBytes = Decompressor.decompress(file);
 			fos.write(decompressedBytes);
@@ -116,15 +114,13 @@ public class Controller {
 		
 		String outputFile = "out\\" + getProjectPath(new File(decompressedFile)) + "\\decompressed.wav";
 		String command = "assets\\ffmpeg -i " + decompressedFile
-		+ /*" -f wav -ar 8000 -acodec wav " +*/ outputFile;
-		System.out.println(command);
+		+ " -f wav -ar 8000 -acodec wav " + outputFile;
 		boolean executed = execCommand(command);
 		if (executed) {
-			mf.setFileLoaded(file.getName(), file.length());
-			this.currentlyLoadedFile = new File(outputFile);
+			this.mf.setFileLastDecompressedSize(new File(decompressedFile).length());
 		}
 		
-		this.mf.setFileLastDecompressedSize(new File(decompressedFile).length());
+		
 	}
 	
 	/**
