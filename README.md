@@ -2,7 +2,7 @@
 Network and Internet Technologies (2017-2018) project @ Universitat Autònoma de Barcelona
 
 ## Scope
-* Convert WAV files to pcm_s16be (PCM 16bit big endian)
+* Convert WAV files to pcm_s16be (PCM signed 16bit big endian)
 * Compress pcm_s16be to own file format (sph) via mu-law
 * Decompress sph to WAV file
 
