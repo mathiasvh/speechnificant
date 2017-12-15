@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -138,6 +139,12 @@ public class MainFrame extends JFrame implements ActionListener {
 			int returnVal = fc.showOpenDialog(MainFrame.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				file = fc.getSelectedFile();
+				if (!file.getName().endsWith(".wav")) {
+					JOptionPane.showMessageDialog (null, "Only .wav files are allowed to be loaded!", "Invalid file format", JOptionPane.ERROR_MESSAGE);
+					file = null;
+					return;
+				}
+				
 				controller.load(file);
 			} else {
 				// cancel
@@ -151,6 +158,11 @@ public class MainFrame extends JFrame implements ActionListener {
 			int returnVal = fc.showOpenDialog(MainFrame.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				file = fc.getSelectedFile();
+				if (!file.getName().endsWith(".pcm")) {
+					JOptionPane.showMessageDialog (null, "Only .pcm files are allowed to compressed!", "Invalid file format", JOptionPane.ERROR_MESSAGE);
+					file = null;
+					return;
+				}
 				controller.compress(file);
 			} else {
 				// cancel
@@ -165,6 +177,11 @@ public class MainFrame extends JFrame implements ActionListener {
 			int returnVal = fc.showOpenDialog(MainFrame.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				file = fc.getSelectedFile();
+				if (!file.getName().endsWith(".sph")) {
+					JOptionPane.showMessageDialog (null, "Only .sph files are allowed to compressed!", "Invalid file format", JOptionPane.ERROR_MESSAGE);
+					file = null;
+					return;
+				}
 				controller.decompress(file);
 			} else {
 				// cancel

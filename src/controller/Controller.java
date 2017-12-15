@@ -40,7 +40,7 @@ public class Controller {
 			}
 		}
 		
-		String outputFile = "out\\" + fileName + "\\loaded.raw";
+		String outputFile = "out\\" + fileName + "\\loaded.pcm";
 		
 		String command = "assets\\ffmpeg -i " + file.getAbsolutePath()
 		+ " -f s16be -ar 8000 -acodec pcm_s16be " + outputFile;
