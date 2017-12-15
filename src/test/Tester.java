@@ -1,17 +1,10 @@
 package test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
-
-import org.junit.Test;
+import java.util.concurrent.ThreadLocalRandom;
 
 import utils.Compressor;
 import utils.Decompressor;
@@ -19,45 +12,48 @@ import utils.Decompressor;
 public class Tester {
 	
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		try {
-			testData();
+			testRandomData();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		int testVal = 609;
+		int decTestVal = decompressedValue(testVal);
+		int diff = Math.abs(testVal - decTestVal);
+		System.out.println("--> " + testVal + " becomes " + decTestVal + " (difference is " + diff + ")");
 	}
 	
-	public static void testData() throws IOException {
+	private static short decompressedValue(int value) throws IOException {
+		return byte2short(Decompressor.decompress(Compressor.compress((new short[] { (short) value }))));
+	}
+	
+	private static short byte2short(byte[] data) {
+		return (short) ((data[0] << 8) | (data[1]));
+	}
+	
+	public static void testRandomData() throws IOException {
 		short[] testData = new short[40];
-		short value = 1;
 
-		for (int i = 0; i < testData.length; i++) {
-			testData[i] = value;
-			value += 20;
-		}
+		for (int i = 0; i < testData.length; i++)
+			testData[i] = (short) ThreadLocalRandom.current().nextInt(0, 15001);
 		
 		byte[] muLawBytes = Compressor.compress(testData);
 		byte[] decompressedTestData = Decompressor.decompress(muLawBytes);
-		ShortBuffer intBuf = ByteBuffer.wrap(decompressedTestData).order(ByteOrder.BIG_ENDIAN).asShortBuffer();
-		short[] decompressedTestDataInts = new short[intBuf.remaining()];
-		intBuf.get(decompressedTestDataInts);
+		ShortBuffer shortBuf = ByteBuffer.wrap(decompressedTestData).order(ByteOrder.BIG_ENDIAN).asShortBuffer();
+		short[] decompressedTestDataShorts = new short[shortBuf.remaining()];
+		shortBuf.get(decompressedTestDataShorts);
 		
-		boolean sameLength = testData.length == decompressedTestDataInts.length;
+		boolean sameLength = testData.length == decompressedTestDataShorts.length;
 		
-		System.out.println("Same length: " + sameLength);
-		System.out.println("Original \t Decompressed");
-		for(int i = 0; i < testData.length && i < decompressedTestDataInts.length; i++) {
-			short val = (short) decompressedTestDataInts[i];
-			System.out.println(testData[i] + "\t" + val);
+		System.out.println("Same length of array: " + sameLength);
+		System.out.println("Original \t Decompressed \t Difference");
+		for(int i = 0; i < testData.length && i < decompressedTestDataShorts.length; i++) {
+			short val = (short) decompressedTestDataShorts[i];
+			int diff = Math.abs(testData[i] - val);
+			System.out.println(testData[i] + "\t\t " + val + "\t\t " + diff);
 		}
-		
-		/*File tmpFile = File.createTempFile("original", ".tmp");
-		DataOutputStream dos = new DataOutputStream(new ByteArrayOutputStream());
-		DataInputStream dis = new DataInputStream(new FileInputStream(tmpFile));*/
-	
-		
-		
 	}
-	
 
 }

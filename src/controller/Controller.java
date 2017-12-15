@@ -103,7 +103,7 @@ public class Controller {
 		}
 
 		byte[] decompressedBytes;
-		// TODO if after .pcm to .wav the wav is found, delete .pcm
+		
 		String decompressedFile = currentFileDir.getAbsolutePath() + "\\" + "decompressed.pcm";
 		try (FileOutputStream fos = new FileOutputStream(decompressedFile)) {
 			decompressedBytes = Decompressor.decompress(file);
@@ -113,13 +113,18 @@ public class Controller {
 		
 		
 		String outputFile = "out\\" + getProjectPath(new File(decompressedFile)) + "\\decompressed.wav";
-		String command = "assets\\ffmpeg -i " + decompressedFile
-		+ " -f wav -ar 8000 -acodec wav " + outputFile;
-		System.out.println(command);
+		String command = "assets\\ffmpeg -f s16be -ar 8000 -ac 1 -i " + decompressedFile
+		+ " -ar 8000 -ac 1 " + outputFile;
+		
 		boolean executed = execCommand(command);
 		if (executed) {
 			this.mf.setFileLastDecompressedSize(new File(decompressedFile).length());
 		}
+		
+		// delete pcm file if wav file is succesfully created
+		File f = new File(decompressedFile);
+		if (f.exists() && !f.isDirectory())
+			(new File(decompressedFile)).delete();
 		
 		
 	}
@@ -146,7 +151,8 @@ public class Controller {
 	}
 	
 	private String getProjectPath(File file) {
-		String fileName = file.getName().replaceAll(".raw", "").replaceAll(".sph", "").replaceAll(".dec", "").replaceAll(".wav", "");
+		int indexLastDot = file.getName().lastIndexOf(".");
+		String fileName = file.getName().substring(0, indexLastDot);
 		if(fileName.equals("loaded") || fileName.equals("compressed") || fileName.equals("decompressed"))
 			return getLastDirectoryInPath(file);
 		else

@@ -14,22 +14,22 @@ public class Compressor {
 	
 	// prevent instantiation
 	private Compressor() {}
-	
+
 	public static byte[] compress(File input) throws IOException {
 		DataInputStream dis = new DataInputStream(new FileInputStream(input));
-		
-		long size = (long) Math.ceil(input.length() /2);
+
+		long size = (long) Math.ceil(input.length() / 2);
 		LinkedList<Short> shortList = new LinkedList<Short>();
-		
+
 		for (int i = 0; i < size; i++)
 			shortList.add(dis.readShort());
 		dis.close();
-		
+
 		short[] inputShortsArray = new short[shortList.size()];
 		int index = 0;
-		for(Short s : shortList)
+		for (Short s : shortList)
 			inputShortsArray[index++] = (short) s;
-		
+
 		return compress(inputShortsArray);
 	}
 	
@@ -37,25 +37,20 @@ public class Compressor {
 		long nbShorts = input.length;
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(outputStream);
-		
+
 		if (nbShorts == 0L)
 			return null;
-			
-		
+
 		int counter = 0;
-		
+
 		while (counter < nbShorts) {
 			try {
-				byte ulawByte = encode(input[counter]);
+				byte ulawByte = encode(input[counter++]);
 				dos.writeByte(ulawByte);
-				counter++;
 			} catch (IndexOutOfBoundsException ioobe) {
 				// index too high
 			}
-			//System.out.print("0x" + Integer.toHexString(ulawByte & 0xff) + " ");
-
 		}
-		
 		return outputStream.toByteArray();
 	}
 	
