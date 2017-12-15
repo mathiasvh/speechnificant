@@ -2,6 +2,7 @@ target
 .env
 .idea/
 *.iml
+.DS_Store
 
 ## Java gitignore
 # Compiled class file
