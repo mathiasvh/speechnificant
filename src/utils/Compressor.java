@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.LinkedList;
 
 public class Compressor {
 	
@@ -15,37 +16,47 @@ public class Compressor {
 	private Compressor() {}
 	
 	public static byte[] compress(File input) throws IOException {
-		FileInputStream in = new FileInputStream(input);
+		DataInputStream dis = new DataInputStream(new FileInputStream(input));
+		
+		long size = (long) Math.ceil(input.length() /2);
+		LinkedList<Short> shortList = new LinkedList<Short>();
+		
+		for (int i = 0; i < size; i++)
+			shortList.add(dis.readShort());
+		dis.close();
+		
+		short[] inputShortsArray = new short[shortList.size()];
+		int index = 0;
+		for(Short s : shortList)
+			inputShortsArray[index++] = (short) s;
+		
+		return compress(inputShortsArray);
+	}
+	
+	public static byte[] compress(short[] input) throws IOException {
+		long nbShorts = input.length;
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(outputStream);
-		DataInputStream dis = new DataInputStream(in);
 		
-		long nbBytes = input.length();
-		long nbShorts = nbBytes / 2;
-		
-		if (nbBytes == 0L) {
-			in.close();
+		if (nbShorts == 0L)
 			return null;
-		}
 			
 		
-		int index = 0;
+		int counter = 0;
 		
-		while (index < nbShorts) {
+		while (counter < nbShorts) {
 			try {
-				byte ulawByte = encode(dis.readShort());
+				byte ulawByte = encode(input[counter]);
 				dos.writeByte(ulawByte);
-				index += 2;
+				counter++;
 			} catch (IndexOutOfBoundsException ioobe) {
 				// index too high
 			}
 			//System.out.print("0x" + Integer.toHexString(ulawByte & 0xff) + " ");
 
 		}
-		in.close();
 		
-		byte[] result = outputStream.toByteArray();
-		return result;
+		return outputStream.toByteArray();
 	}
 	
 	@SuppressWarnings("unused")

@@ -103,8 +103,8 @@ public class Controller {
 		}
 
 		byte[] decompressedBytes;
-		// TODO if after .raw to .wav the wav is found, delete .dec
-		String decompressedFile = currentFileDir.getAbsolutePath() + "\\" + "decompressed.raw";
+		// TODO if after .pcm to .wav the wav is found, delete .pcm
+		String decompressedFile = currentFileDir.getAbsolutePath() + "\\" + "decompressed.pcm";
 		try (FileOutputStream fos = new FileOutputStream(decompressedFile)) {
 			decompressedBytes = Decompressor.decompress(file);
 			fos.write(decompressedBytes);
@@ -115,6 +115,7 @@ public class Controller {
 		String outputFile = "out\\" + getProjectPath(new File(decompressedFile)) + "\\decompressed.wav";
 		String command = "assets\\ffmpeg -i " + decompressedFile
 		+ " -f wav -ar 8000 -acodec wav " + outputFile;
+		System.out.println(command);
 		boolean executed = execCommand(command);
 		if (executed) {
 			this.mf.setFileLastDecompressedSize(new File(decompressedFile).length());

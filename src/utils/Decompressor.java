@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class Decompressor {
 	
@@ -13,32 +14,38 @@ public class Decompressor {
 		private Decompressor() {}
 		
 		public static byte[] decompress(File input) throws IOException {
-			FileInputStream in = new FileInputStream(input);
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			DataOutputStream dos = new DataOutputStream(outputStream);
-			DataInputStream dis = new DataInputStream(in);
+			DataInputStream dis = new DataInputStream(new FileInputStream(input));
 			
-			long nbBytes = input.length();
+			int size = (int) Math.ceil(input.length());
+			byte[] muLawBytes = new byte[size];
+			dis.readFully(muLawBytes);
+			dis.close();
 			
-			if (nbBytes == 0L) {
-				in.close();
-				return null;
-			}
-			
-			int index = 0;
-			
-			while (index < nbBytes) {
-				byte nextByte = dis.readByte();
-				dos.writeShort(decode(nextByte));
-				index++;
-			}
-			
-			in.close();
-			
-			byte[] result = outputStream.toByteArray();
-			return result;
+			return decompress(muLawBytes);
 		}
 		
+	public static byte[] decompress(byte[] muLawBytes) throws IOException {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(outputStream);
+		long nbBytes = muLawBytes.length;
+
+		if (nbBytes == 0L)
+			return null;
+
+		int index = 0;
+
+		while (index < nbBytes) {
+			byte nextByte = muLawBytes[index++];
+			dos.writeShort(decode(nextByte));
+		}
+
+		return outputStream.toByteArray();
+			/*File tmpFile = File.createTempFile("tempFile", ".tmp");
+			DataOutputStream dos = new DataOutputStream(new ByteArrayOutputStream());
+			dos.write(muLawBytes);
+			return decompress(tmpFile);*/
+	}
+
 		private static short decode(byte ulawByte) {
 			// Perform one's complement to undo the one's
 			// complement at the end of the encode
