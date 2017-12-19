@@ -13,6 +13,7 @@ Network and Internet Technologies (2017-2018) project @ Universitat Autònoma de
 * [ffmpeg examples and info](https://trac.ffmpeg.org/wiki/audio%20types)
 * [Voice activity detection](https://dsp.stackexchange.com/questions/1522/simplest-way-of-detecting-where-audio-envelopes-start-and-stop)
 * [Java ffmpeg wrapper](https://github.com/bramp/ffmpeg-cli-wrapper)
+* [List of uncompressed speech files](http://www.voiptroubleshooter.com/open_speech/american.html)
 
 ## Flow
 ![alt text](https://github.com/mathiasvh/speechnificant/blob/master/SpeechnificantFlow.png "Strategy")
