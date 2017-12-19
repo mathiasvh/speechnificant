@@ -11,7 +11,8 @@ Network and Internet Technologies (2017-2018) project @ Universitat Autònoma de
 * [Theory and Java mu-law example](https://www.developer.com/java/other/article.php/3286861/Java-Sound-Compressing-Audio-with-mu-Law-Encoding.htm)
 * [C example of mu-law and A-law](https://www.codeproject.com/Articles/14237/Using-the-G-standard)
 * [ffmpeg examples and info](https://trac.ffmpeg.org/wiki/audio%20types)
-* [java ffmpeg wrapper](https://dsp.stackexchange.com/questions/1522/simplest-way-of-detecting-where-audio-envelopes-start-and-stop)
+* [Voice activity detection](https://dsp.stackexchange.com/questions/1522/simplest-way-of-detecting-where-audio-envelopes-start-and-stop)
+* [Java ffmpeg wrapper](https://github.com/bramp/ffmpeg-cli-wrapper)
 
 ## Flow
 ![alt text](https://github.com/mathiasvh/speechnificant/blob/master/SpeechnificantFlow.png "Strategy")
