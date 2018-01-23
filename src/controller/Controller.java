@@ -43,6 +43,13 @@ public class Controller {
 			}
 		}
 		
+		//TODO
+		/*try {
+		FFmpeg ffmpeg = new FFmpeg("/assets/ffmpeg");
+		} catch (IOException e) {
+			System.out.println("didn't find ffmpeg"); 
+		} */
+		
 		String outputFile = "out\\" + fileName + "\\loaded.pcm";
 		
 		String command = "assets\\ffmpeg -i " + file.getAbsolutePath()
