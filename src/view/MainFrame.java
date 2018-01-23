@@ -3,6 +3,8 @@ package view;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 import javax.swing.JButton;
@@ -22,14 +24,15 @@ public class MainFrame extends JFrame implements ActionListener {
 	private JFileChooser fc;
 	private JButton btnLoadFile, btnCompress, btnDecompress;
 	private JPanel panel;
-	private JLabel lblCurrentlyLoadFile, lblSizeLoadedFile, lblLastFileCompressedSize, lblLastFileDecompressedSize;
-	
+	private JLabel lblCurrentlyLoadFile, lblSizeLoadedFile, lblLastFileCompressedSize, lblLastFileDecompressedSize,
+			lblCompressionPercentage, lblMSEValue;
+
 	private File file;
 	
 	public MainFrame() {
 		this.setTitle("Speechnificant");
 		this.setResizable(false);
-		this.setBounds(0, 0, 450, 285);
+		this.setBounds(0, 0, 560, 285);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.panel = new JPanel(null);
@@ -70,7 +73,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		lblLastFileCompressedSize.setBounds(210, 145, 50, 25);
 
 		JSeparator sep2 = new JSeparator(SwingConstants.HORIZONTAL);
-		sep2.setBounds(0, 175, this.getWidth(), 1);
+		sep2.setBounds(0, 175, 315, 1);
 
 		btnDecompress = new JButton("Decompress");
 		btnDecompress.setBounds(10, 190, 150, 25);
@@ -82,6 +85,21 @@ public class MainFrame extends JFrame implements ActionListener {
 		
 		lblLastFileDecompressedSize = new JLabel("N/A");
 		lblLastFileDecompressedSize.setBounds(225, 210, 50, 25);
+		
+		JSeparator sep3 = new JSeparator(SwingConstants.VERTICAL);
+		sep3.setBounds(315, 100, 1, this.getHeight() - 100);
+		
+		JLabel lblCompression= new JLabel("Compression percentage:");
+		lblCompression.setBounds(325, 125, 160, 25);
+		
+		lblCompressionPercentage = new JLabel("N/A");
+		lblCompressionPercentage.setBounds(490, 125, 50, 25);
+		
+		JLabel lblMSE = new JLabel("Mean Squared Error:");
+		lblMSE.setBounds(325, 205, 130, 25);
+		
+		lblMSEValue = new JLabel("N/A");
+		lblMSEValue.setBounds(460, 205, 50, 25);
 		
 		fc = new JFileChooser();
 		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -101,6 +119,11 @@ public class MainFrame extends JFrame implements ActionListener {
 		this.panel.add(btnDecompress);
 		this.panel.add(lblLastFileDecompressed);
 		this.panel.add(lblLastFileDecompressedSize);
+		this.panel.add(sep3);
+		this.panel.add(lblCompression);
+		this.panel.add(lblCompressionPercentage);
+		this.panel.add(lblMSE);
+		this.panel.add(lblMSEValue);
 
 		getContentPane().add(panel);
 		this.panel.setVisible(true);
@@ -114,6 +137,15 @@ public class MainFrame extends JFrame implements ActionListener {
 	
 	public void setFileLastDecompressedSize(long size) {
 		this.lblLastFileDecompressedSize.setText(readableFileSize(size));
+	}
+	
+	public void setMSE(double mse) {
+		System.out.println(mse);
+		this.lblMSEValue.setText(round(mse, 2));
+	}
+	
+	public void setCompressionPercentage(double percentage) {
+		this.lblCompressionPercentage.setText(round(percentage, 2)  + "%");
 	}
 	
 	private Controller controller = null;
@@ -194,6 +226,14 @@ public class MainFrame extends JFrame implements ActionListener {
 	    final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
 	    int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
 	    return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+	}
+	
+	public static String round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.toString();
 	}
 	
 
