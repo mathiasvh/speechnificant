@@ -1,6 +1,9 @@
 package controller;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -86,7 +89,11 @@ public class Controller {
 			fos.close();
 		} catch (IOException e) {}
 		
-		this.mf.setFileLastCompressedSize(new File(compressedFile).length());
+		long compressedFileSize = new File(compressedFile).length();
+		long originalFileSize = file.length();
+		this.mf.setFileLastCompressedSize(compressedFileSize);
+		double compressionPercentage = Math.abs(((double) originalFileSize - (double) compressedFileSize) / (double) originalFileSize) * 100;
+		this.mf.setCompressionPercentage(compressionPercentage);
 	}
 	
 	public void decompress(File file) {
@@ -104,27 +111,60 @@ public class Controller {
 
 		byte[] decompressedBytes;
 		
-		String decompressedFile = currentFileDir.getAbsolutePath() + "\\" + "decompressed.pcm";
-		try (FileOutputStream fos = new FileOutputStream(decompressedFile)) {
+		String decompressedFilePath = currentFileDir.getAbsolutePath() + "\\" + "decompressed.pcm";
+		try (FileOutputStream fos = new FileOutputStream(decompressedFilePath)) {
 			decompressedBytes = Decompressor.decompress(file);
 			fos.write(decompressedBytes);
 			fos.close();
 		} catch (IOException e) {}
 		
 		
-		String outputFile = "out\\" + getProjectPath(new File(decompressedFile)) + "\\decompressed.wav";
-		String command = "assets\\ffmpeg -f s16be -ar 8000 -ac 1 -i " + decompressedFile
+		String outputFile = "out\\" + getProjectPath(new File(decompressedFilePath)) + "\\decompressed.wav";
+		String command = "assets\\ffmpeg -f s16be -ar 8000 -ac 1 -i " + decompressedFilePath
 		+ " -ar 8000 -ac 1 " + outputFile;
 		
 		boolean executed = execCommand(command);
 		if (executed) {
-			this.mf.setFileLastDecompressedSize(new File(decompressedFile).length());
+			this.mf.setFileLastDecompressedSize(new File(decompressedFilePath).length());
+			
+			// calculate MSE
+			double totalMSE = 0.0d;
+			try { 
+				File decompressedFile = new File(decompressedFilePath);
+				DataInputStream disDecompressed = new DataInputStream(new FileInputStream(decompressedFile));
+				long decompressedFileLength = decompressedFile.length();
+				
+				long originalFileLength = this.currentlyLoadedFile.length();
+				DataInputStream disOriginal = new DataInputStream(new FileInputStream(this.currentlyLoadedFile));
+
+				int index = 0;
+				
+				while (index < originalFileLength && index < decompressedFileLength) {
+					short original = disOriginal.readShort();
+					short decomp = disDecompressed.readShort();
+					
+					totalMSE += (double) Math.pow(decomp - original, 2);
+					
+					index += 2;
+				}
+
+				disDecompressed.close();
+				disOriginal.close();
+				
+				totalMSE = totalMSE / (index/2);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			this.mf.setMSE(totalMSE);
+			
 		}
 		
 		// delete pcm file if wav file is succesfully created
-		File f = new File(decompressedFile);
+		File f = new File(decompressedFilePath);
 		if (f.exists() && !f.isDirectory())
-			(new File(decompressedFile)).delete();
+			(new File(decompressedFilePath)).delete();
 		
 		
 	}
