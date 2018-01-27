@@ -26,7 +26,7 @@ public class LinearPrediction {
     private final double[] error;
     private final double[] k;
     private final double[][] matrix;
-
+    
 
     /**
      * Constructor for LinearPredictiveCoding
@@ -40,6 +40,8 @@ public class LinearPrediction {
         this.error = new double[poles];
         this.k = new double[poles];
         this.matrix = new double[poles][poles];
+        
+
     }
 
     /**
@@ -65,15 +67,22 @@ public class LinearPrediction {
         DiscreteAutocorrelation dalj = new DiscreteAutocorrelation();
         double[] autocorrelations = new double[poles];
         for(int i = 0; i < poles; i++) {
-            autocorrelations[i] = dalj.autocorrelate(window, i);
+        
+           // autocorrelations[i] = dalj.autocorrelate(window, i);
+        	autocorrelations[i] = dalj.Myautocorrelate(window[i], window[i+1]);
+        	System.out.println(autocorrelations[i]);
         }
+              
+        
 
         error[0] = autocorrelations[0];
+      
 
         for (int m = 1; m < poles; m++) {
             double tmp = autocorrelations[m];
             for (int i = 1; i < m; i++) {
                 tmp -= matrix[m - 1][i] * autocorrelations[m - i];
+                
             }
             k[m] = tmp / error[m - 1];
 
@@ -82,9 +91,11 @@ public class LinearPrediction {
             }
             matrix[m][m] = k[m];
             error[m] = (1 - (k[m] * k[m])) * error[m - 1];
+            
+           
         }
 
-        for (int i = 0; i < poles; i++) {
+       for (int i = 0; i < poles; i++) {
             if (Double.isNaN(matrix[poles - 1][i])) {
                 output[i] = 0.0;
             } else {
@@ -92,13 +103,17 @@ public class LinearPrediction {
             }  
         }
         
+       
+        
         return new double[][] { output, error };
     }
+    
     public static void main(String[] args) {
-    	double [] myList = {0400,5200,7700,8200,8500,5800,3200};
+    	double [] myList = {2,7,5,9,17};
   
-    	 LinearPrediction lp = new LinearPrediction(7,7);
+    	 LinearPrediction lp = new LinearPrediction(5,4);
     	lp.applyLinearPredictiveCoding(myList);
+    	
     	
 		
 	}

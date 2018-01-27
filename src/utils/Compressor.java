@@ -2,6 +2,8 @@ package utils;
 
 import java.io.File;
 import java.io.IOException;
+import utils.Mulaw;
+import utils.Util;
 
 public class Compressor {
 
@@ -9,7 +11,10 @@ public class Compressor {
 	private Compressor() {}
 
 	public static byte[] compress(short[] input) throws IOException {
-		return Mulaw.compress(input);
+		byte[] afterMuLaw = Mulaw.compress(input);
+		//return comppress(afterMuLaw);
+		return afterMuLaw;
+		
 	}
 
 	public static byte[] compress(File input) throws IOException {
