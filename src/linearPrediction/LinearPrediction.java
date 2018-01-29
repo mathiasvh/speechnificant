@@ -68,7 +68,7 @@ public class LinearPrediction {
         
         //   autocorrelations[i] = dalj.autocorrelate(window, i);
        	autocorrelations[i] = dalj.Myautocorrelate(window[i], window[i+1]);
-       	System.out.println(autocorrelations[i]+"autoii");
+      // 	System.out.println(autocorrelations[i]+"autoii");
         }
         
         PedictionOutput[0]=0.0;
@@ -93,15 +93,25 @@ public class LinearPrediction {
         return new double[][] { PedictionOutput, PedictionError };
     }
     
-  /*Testing purpose
-   * 
-   *  public static void main(String[] args) {
+  /*  public double[] applyLinearSynthesisCoding(double[][] PredictedSamples) {
+    double 	SynthesisOutput[] = PredictedSamples[0];
+    double 	SynthesisError[] = PredictedSamples[1];
+   //for()
+    
+        return SynthesisOutput;
+    }*/
+    
+ // Testing purpose
+   
+     public static void main(String[] args) {
     	double [] myList = {1,5,4,7};
   
     	 LinearPrediction lp = new LinearPrediction(4,3);
     lp.applyLinearPredictiveCoding(myList);
+    double[][]Output = lp.applyLinearPredictiveCoding(myList);
+   // lp.applyLinearSynthesisCoding(Output);
     	
 		
-	}*/
+	}
    
 }
