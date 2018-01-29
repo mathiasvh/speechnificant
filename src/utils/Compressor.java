@@ -17,7 +17,7 @@ public class Compressor {
 		double[] inputDoubles = Util.convertShortArrayToDoubleArray(inputShorts);
 		LinearPrediction lpc = new LinearPrediction(inputDoubles.length,(inputDoubles.length-1));
 		   short[][]predictOutput = lpc.applyLinearPredictiveCoding(inputDoubles);
-		byte[] afterMuLaw = Mulaw.compress(input);
+		byte[] afterMuLaw = Mulaw.compress(predictOutput[0]);
 		//return comppress(afterMuLaw);
 		return afterMuLaw;		
 	}
