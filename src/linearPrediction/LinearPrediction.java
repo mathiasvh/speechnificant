@@ -50,7 +50,7 @@ public class LinearPrediction {
      * @return an array of size 2 containing LPC coefficients in 0 and PedictionError coefficients in 1
      */
     public double[][] applyLinearPredictiveCoding(double[] window) {
-    	System.out.println(windowSize+"WSSSS"+window.length+"wllll");
+    	
         
         if(windowSize != window.length) {
             throw new IllegalArgumentException("Given window length was not equal to the one provided in constructor : [" 
@@ -96,25 +96,29 @@ public class LinearPrediction {
     public double[] applyLinearSynthesisCoding(double[][] PredictedSamples) {
     double 	SynthesisOutput[] = PredictedSamples[0];
     double 	SynthesisError[] = PredictedSamples[1];
-   for(int k=0;k<PredictedSamples.length;k++) {
-	   double Input = SynthesisOutput[k]+SynthesisError[k];
-	   System.out.println(Input+"Inpuuuu");
-   }
     
-        return SynthesisOutput;
+    double[] Input = new double[SynthesisOutput.length];
+    for (int k=0;k<SynthesisOutput.length;k++) {
+    	Input[k] = SynthesisOutput[k]+SynthesisError[k];
     }
+    
+    return Input;
+    
+    }
+    	
+    
     
  // Testing purpose
    
-     public static void main(String[] args) {
-    	double [] myList = {1,5,4,7};
-  
-    	 LinearPrediction lp = new LinearPrediction(4,3);
-    lp.applyLinearPredictiveCoding(myList);
-    double[][]Output = lp.applyLinearPredictiveCoding(myList);
-    lp.applyLinearSynthesisCoding(Output);
-    	
-		
-	}
+//     public static void main(String[] args) {
+//    	double [] myList = {1,5,4,7};
+//  
+//    	 LinearPrediction lp = new LinearPrediction(4,3);
+//    lp.applyLinearPredictiveCoding(myList);
+//    double[][]Output = lp.applyLinearPredictiveCoding(myList);
+//    lp.applyLinearSynthesisCoding(Output);
+//    	
+//		
+//	}
    
 }

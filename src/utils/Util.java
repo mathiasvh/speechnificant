@@ -48,7 +48,7 @@ public class Util {
 		}
 	}
 	public static double[] convertShortArrayToDoubleArray(short[] Array) {
-		System.out.println(Array.length+"arrllen");
+		
 		double[] data = new double[Array.length];
 		for(int j = 0; j < Array.length; j++) {
 		data[j]=  (short) Array[j];
@@ -94,6 +94,8 @@ public class Util {
 		  // System.out.println(inputDoubles+"ipdoubs");
 		  LinearPrediction lpc = new LinearPrediction(inputDoubles.length,(inputDoubles.length-1)); 
 		   lpc.applyLinearPredictiveCoding(inputDoubles);
+		   double[][]predictOutput = lpc.applyLinearPredictiveCoding(inputDoubles);
+		   lpc.applyLinearSynthesisCoding(predictOutput);
 		   
 		   
 		   
