@@ -13,17 +13,18 @@ public class Compressor {
 	private Compressor() {}
 
 	public static byte[] compress(short[]input) throws IOException {
+		short [] inputShorts = input;
+		double[] inputDoubles = Util.convertShortArrayToDoubleArray(inputShorts);
+		LinearPrediction lpc = new LinearPrediction(inputDoubles.length,(inputDoubles.length-1));
+		   short[][]predictOutput = lpc.applyLinearPredictiveCoding(inputDoubles);
 		byte[] afterMuLaw = Mulaw.compress(input);
 		//return comppress(afterMuLaw);
 		return afterMuLaw;		
 	}
 
 	public static byte[] compress(File input) throws IOException {
-		short [] inputShorts = Util.getShortsFromFile(input);
-		double[] inputDoubles = Util.convertShortArrayToDoubleArray(inputShorts);
-		LinearPrediction lpc = new LinearPrediction(inputDoubles.length,(inputDoubles.length-1));
-		   short[][]predictOutput = lpc.applyLinearPredictiveCoding(inputDoubles);
-		return compress(predictOutput[0]);
+		
+		return compress(Util.getShortsFromFile(input));
 	}
 
 }
