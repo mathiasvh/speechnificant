@@ -109,9 +109,9 @@ public class EndPointDetection {
 			}
 		}
 	//	System.out.println(silenceRemovedSignal+"srrr");
-		for(int i=0;i<silenceRemovedSignal.length;i++) {
-			System.out.println(silenceRemovedSignal[i]+"srrarray");
-		}
+//		for(int i=0;i<silenceRemovedSignal.length;i++) {
+//			System.out.println(silenceRemovedSignal[i]+"srrarray");
+//		}
 		// end
 		return silenceRemovedSignal;
 	}

@@ -87,6 +87,7 @@ public class LinearPrediction {
 
      short MyShortPredictionOutput[] = Util.convertDoubleArrayToShortArray(PedictionOutput);
      short MyShortPedictionError[] = Util.convertDoubleArrayToShortArray(PedictionError);
+     
         
         return new short[][] { MyShortPredictionOutput, MyShortPedictionError };
     }

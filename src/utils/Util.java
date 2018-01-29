@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.LinkedList;
 import linearPrediction.LinearPrediction;
+import silence_removal.EndPointDetection;
 import linearPrediction.DiscreteAutocorrelation;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -64,10 +65,20 @@ public static float[] convertShortArrayToFloatArray(short[] Array) {
 		for(int j = 0; j < Array.length; j++) {
 		data[j]=  (short) Array[j];
 		}
+	
 		
 		
 		return data;
 		}
+
+public static double[] convertFloatArrayToDoubleArray(float[] Array) {
+	
+	double[] data = new double[Array.length];
+	for(int j = 0; j < Array.length; j++) {
+	data[j]=  (float) Array[j];
+	}
+	return data;
+}
 	
 	
 public static short[] convertDoubleArrayToShortArray(double[] Array) {
@@ -106,15 +117,20 @@ public static short[] convertDoubleArrayToShortArray(double[] Array) {
 		return bb.getShort(0);
 	}
 	public static void main(String[] args) throws IOException  {
-		   File myWavFile = new File("/Users/tharun/Documents/SpeechCompress/male.wav");		 
-		   short [] inputShorts = Util.getShortsFromFile(myWavFile);
+		//   File myWavFile = new File("/Users/tharun/Documents/SpeechCompress/male.wav");		 
+		 File myWavFile = new File("C:/Users/mynor/Desktop/demo1.wav");
+		 short [] inputShorts=Util.getShortsFromFile(myWavFile);
+		 float [] inputFloats = Util.convertShortArrayToFloatArray(inputShorts);
+			EndPointDetection epdt = new EndPointDetection(inputFloats,8000);
+			float[] epdResult=epdt.doEndPointDetection();
+			double[] inputDoubles = Util.convertFloatArrayToDoubleArray(epdResult);
 		   
-		   double[] inputDoubles = Util.convertShortArrayToDoubleArray(inputShorts);
+		   //double[] inputDoubles = Util.convertShortArrayToDoubleArray(inputShorts);
 		  // Util.printDoubleArray(inputDoubles);
 		  // System.out.println(inputDoubles+"ipdoubs");
 		  LinearPrediction lpc = new LinearPrediction(inputDoubles.length,(inputDoubles.length-1));
 		   short[][]predictOutput = lpc.applyLinearPredictiveCoding(inputDoubles);
-		  lpc.applyLinearSynthesisCoding(predictOutput);
+		 // lpc.applyLinearSynthesisCoding(predictOutput);
 		   
 		   
 		   
