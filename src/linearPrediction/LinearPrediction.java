@@ -93,13 +93,16 @@ public class LinearPrediction {
         return new double[][] { PedictionOutput, PedictionError };
     }
     
-  /*  public double[] applyLinearSynthesisCoding(double[][] PredictedSamples) {
+    public double[] applyLinearSynthesisCoding(double[][] PredictedSamples) {
     double 	SynthesisOutput[] = PredictedSamples[0];
     double 	SynthesisError[] = PredictedSamples[1];
-   //for()
+   for(int k=0;k<PredictedSamples.length;k++) {
+	   double Input = SynthesisOutput[k]+SynthesisError[k];
+	   System.out.println(Input+"Inpuuuu");
+   }
     
         return SynthesisOutput;
-    }*/
+    }
     
  // Testing purpose
    
@@ -109,7 +112,7 @@ public class LinearPrediction {
     	 LinearPrediction lp = new LinearPrediction(4,3);
     lp.applyLinearPredictiveCoding(myList);
     double[][]Output = lp.applyLinearPredictiveCoding(myList);
-   // lp.applyLinearSynthesisCoding(Output);
+    lp.applyLinearSynthesisCoding(Output);
     	
 		
 	}
