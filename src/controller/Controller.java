@@ -119,14 +119,9 @@ public class Controller {
 		} catch (IOException e) {}
 		
 		
-<<<<<<< HEAD
-		
-		String outputFile = "out\\" + getProjectPath(new File(decompressedFile)) + "\\decompressed.wav";
-		String command = "assets\\ffmpeg -f s16be -ar 8000 -ac 1 -i " + decompressedFile
-=======
+
 		String outputFile = "out\\" + getProjectPath(new File(decompressedFilePath)) + "\\decompressed.wav";
 		String command = "assets\\ffmpeg -f s16be -ar 8000 -ac 1 -i " + decompressedFilePath
->>>>>>> f5ab080fd18e26922fd29d1e85057f7cb1cd87ab
 		+ " -ar 8000 -ac 1 " + outputFile;
 		
 		boolean executed = execCommand(command);
