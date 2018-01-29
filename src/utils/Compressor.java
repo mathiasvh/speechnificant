@@ -12,8 +12,8 @@ public class Compressor {
 	// prevent instantiation
 	private Compressor() {}
 
-	public static byte[] compress(short[][] input) throws IOException {
-		byte[] afterMuLaw = Mulaw.compress(input[0]);
+	public static byte[] compress(short[]input) throws IOException {
+		byte[] afterMuLaw = Mulaw.compress(input);
 		//return comppress(afterMuLaw);
 		return afterMuLaw;		
 	}
@@ -23,7 +23,7 @@ public class Compressor {
 		double[] inputDoubles = Util.convertShortArrayToDoubleArray(inputShorts);
 		LinearPrediction lpc = new LinearPrediction(inputDoubles.length,(inputDoubles.length-1));
 		   short[][]predictOutput = lpc.applyLinearPredictiveCoding(inputDoubles);
-		return compress(predictOutput);
+		return compress(predictOutput[0]);
 	}
 
 }
