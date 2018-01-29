@@ -57,6 +57,19 @@ public class Util {
 		
 		return data;
 		}
+	
+public static float[] convertShortArrayToFloatArray(short[] Array) {
+		
+		float[] data = new float[Array.length];
+		for(int j = 0; j < Array.length; j++) {
+		data[j]=  (short) Array[j];
+		}
+		
+		
+		return data;
+		}
+	
+	
 public static short[] convertDoubleArrayToShortArray(double[] Array) {
 		
 		short[] data1 = new short[Array.length];
