@@ -13,6 +13,7 @@ public class Decompressor {
 	}
 
 	public static byte[] decompress(File input) throws IOException {
+		
 		return decompress(Util.getBytesFromFile(input));
 	}
 

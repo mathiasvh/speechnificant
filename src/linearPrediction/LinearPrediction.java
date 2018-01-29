@@ -49,7 +49,7 @@ public class LinearPrediction {
      * @param window windowed part of voice sample, must be of the same size as the windowSize passed in constructor
      * @return an array of size 2 containing LPC coefficients in 0 and PedictionError coefficients in 1
      */
-    public double[][] applyLinearPredictiveCoding(double[] window) {
+    public short[][] applyLinearPredictiveCoding(double[] window) {
     	
         
         if(windowSize != window.length) {
@@ -75,7 +75,7 @@ public class LinearPrediction {
         PedictionOutput[1]=window[0];
         PedictionError[0]=window[0];
        
-      //  PedictionError[0] = autocorrelations[0];
+   
         for (int m = 1; m < poles; m++) {
             PedictionError[m] = autocorrelations[m-1];
              }
@@ -83,42 +83,41 @@ public class LinearPrediction {
        for(int j=2;j<poles;j++) {
     	   PedictionOutput[j] = PedictionError[j-1]+PedictionOutput[j-1];
        }
-//   Testing purpose
-       //for(int h=0;h<poles;h++) {
-//    	   System.out.println(PedictionOutput[h]+"outhhhh");
-//       }
-  
-      
+
+
+     short MyShortPredictionOutput[] = Util.convertDoubleArrayToShortArray(PedictionOutput);
+     short MyShortPedictionError[] = Util.convertDoubleArrayToShortArray(PedictionError);
         
-        return new double[][] { PedictionOutput, PedictionError };
+        return new short[][] { MyShortPredictionOutput, MyShortPedictionError };
     }
     
-    public double[] applyLinearSynthesisCoding(double[][] PredictedSamples) {
-    double 	SynthesisOutput[] = PredictedSamples[0];
-    double 	SynthesisError[] = PredictedSamples[1];
+    public short[] applyLinearSynthesisCoding(short[][] PredictedSamples) {
+    	short 	SynthesisOutput[] = PredictedSamples[0];
+    	short 	SynthesisError[] = PredictedSamples[1];
     
-    double[] Input = new double[SynthesisOutput.length];
+    	double[] Input = new double[SynthesisOutput.length];
     for (int k=0;k<SynthesisOutput.length;k++) {
     	Input[k] = SynthesisOutput[k]+SynthesisError[k];
+    //	System.out.println(Input[k]);
     }
-    
-    return Input;
+    short InputShort[]= Util.convertDoubleArrayToShortArray(Input);
+
+    return InputShort;
     
     }
     	
     
     
- // Testing purpose
+ //Testing purpose
    
-//     public static void main(String[] args) {
-//    	double [] myList = {1,5,4,7};
-//  
-//    	 LinearPrediction lp = new LinearPrediction(4,3);
-//    lp.applyLinearPredictiveCoding(myList);
-//    double[][]Output = lp.applyLinearPredictiveCoding(myList);
-//    lp.applyLinearSynthesisCoding(Output);
-//    	
-//		
-//	}
+     public static void main(String[] args) {
+    	double [] myList = {1,5,4,7};
+  
+    	 LinearPrediction lp = new LinearPrediction(4,3);
+   short[][]Output = lp.applyLinearPredictiveCoding(myList);
+   lp.applyLinearSynthesisCoding(Output);
+    	
+		
+	}
    
 }

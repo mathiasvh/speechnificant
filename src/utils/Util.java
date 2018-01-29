@@ -52,12 +52,19 @@ public class Util {
 		double[] data = new double[Array.length];
 		for(int j = 0; j < Array.length; j++) {
 		data[j]=  (short) Array[j];
-		
-			//System.out.println(data[j]);
 		}
 		
 		
 		return data;
+		}
+public static short[] convertDoubleArrayToShortArray(double[] Array) {
+		
+		short[] data1 = new short[Array.length];
+		for(int j = 0; j < Array.length; j++) {
+		data1[j]=  (short) Array[j];
+		}
+		
+		return data1;
 		
 	}
 	
@@ -92,10 +99,9 @@ public class Util {
 		   double[] inputDoubles = Util.convertShortArrayToDoubleArray(inputShorts);
 		  // Util.printDoubleArray(inputDoubles);
 		  // System.out.println(inputDoubles+"ipdoubs");
-		  LinearPrediction lpc = new LinearPrediction(inputDoubles.length,(inputDoubles.length-1)); 
-		   lpc.applyLinearPredictiveCoding(inputDoubles);
-		   double[][]predictOutput = lpc.applyLinearPredictiveCoding(inputDoubles);
-		   lpc.applyLinearSynthesisCoding(predictOutput);
+		  LinearPrediction lpc = new LinearPrediction(inputDoubles.length,(inputDoubles.length-1));
+		   short[][]predictOutput = lpc.applyLinearPredictiveCoding(inputDoubles);
+		  lpc.applyLinearSynthesisCoding(predictOutput);
 		   
 		   
 		   
