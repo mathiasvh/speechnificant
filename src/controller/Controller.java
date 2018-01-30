@@ -152,7 +152,7 @@ public class Controller {
 				disDecompressed.close();
 				disOriginal.close();
 				
-				totalMSE = totalMSE / (index/2);
+				totalMSE = totalMSE / (index / 2);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

@@ -9,6 +9,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import utils.Compressor;
 import utils.Decompressor;
 
+/**
+ * @deprecated
+ */
 public class Tester {
 	
 	
@@ -37,7 +40,7 @@ public class Tester {
 		short[] testData = new short[40];
 
 		for (int i = 0; i < testData.length; i++)
-			testData[i] = (short) ThreadLocalRandom.current().nextInt(0, 15001);
+			testData[i] = (short) ThreadLocalRandom.current().nextInt(0, 14500);
 		
 		byte[] muLawBytes = Compressor.compress(testData);
 		byte[] decompressedTestData = Decompressor.decompress(muLawBytes);

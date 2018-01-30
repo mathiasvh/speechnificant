@@ -1,9 +1,7 @@
 package linearPrediction;
-import java.util.*;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import linearPrediction.DiscreteAutocorrelation;
-import utils.Util;
 
 /**
  * Linear Predictive Coding algorithm
@@ -104,21 +102,14 @@ public class LinearPredictor {
                 output[i] = matrix[poles - 1][i];
             }  
         }
-       Util.printDoubleArray(output);
-       Util.printDoubleArray(error);
+       // Util.printDoubleArray(output);
+       // Util.printDoubleArray(error);
         
       
         
         return new double[][] { output, error };
     }
     
-   public static void main(String[] args) {
-    	double [] myList = {1,5,4,7};
-  
-    	 LinearPrediction lp = new LinearPrediction(4,3);
-    lp.applyLinearPredictiveCoding(myList);
-    	
-		
-	}
+
    
 }

@@ -99,7 +99,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		lblMSE.setBounds(325, 205, 130, 25);
 		
 		lblMSEValue = new JLabel("N/A");
-		lblMSEValue.setBounds(460, 205, 50, 25);
+		lblMSEValue.setBounds(450, 205, 100, 25);
 		
 		fc = new JFileChooser();
 		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -140,7 +140,6 @@ public class MainFrame extends JFrame implements ActionListener {
 	}
 	
 	public void setMSE(double mse) {
-		System.out.println(mse);
 		this.lblMSEValue.setText(round(mse, 2));
 	}
 	
