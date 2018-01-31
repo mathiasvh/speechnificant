@@ -4,7 +4,6 @@ package linearPrediction;
  * Discrete autocorrelation at lag j algorithm
  * 
  * @see <a href="http://en.wikipedia.org/wiki/Autocorrelation">Autocorrelation</a>
- * @author Tharun
  */
 public class DiscreteAutocorrelation {
 
